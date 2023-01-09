@@ -1,18 +1,37 @@
-import Header from "./Header";
-import Home from "./Home";
+import { useState } from "react";
 import Product from "./Product";
 
 const App = () => {
-  const { pathname } = window.location;
+  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState([]);
 
-  let Component = null;
+  async function handleClick(event) {
+    setLoading(true);
 
-  pathname === "/product" ? (Component = Product) : (Component = Home);
+    const response = await fetch(
+      `https://ranekapi.origamid.dev/json/api/produto/${event.target.innerText}`
+    );
+
+    const json = await response.json();
+
+    setData(json);
+    setLoading(false);
+  }
 
   return (
     <>
-      <Header> </Header>
-      <Component></Component>
+      <button style={{ marginLeft: "3px" }} onClick={handleClick}>
+        notebook
+      </button>
+      <button style={{ marginLeft: "3px" }} onClick={handleClick}>
+        smartphone
+      </button>
+      <button style={{ marginLeft: "3px" }} onClick={handleClick}>
+        tablet
+      </button>
+
+      {loading && <p> Carregando... </p>}
+      {data && !loading && <Product data={data} />}
     </>
   );
 };
