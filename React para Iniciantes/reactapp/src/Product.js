@@ -1,13 +1,19 @@
-import React from "react";
+import { useEffect, useState } from "react";
 
-const Product = ({ data }) => {
+const Product = ({ product }) => {
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    if (product !== null) {
+      fetch(`https://ranekapi.origamid.dev/json/api/produto/${product}`)
+        .then((response) => response.json())
+        .then((json) => setData(json));
+    }
+  }, [product]);
   return (
     <>
       <h1>{data.nome}</h1>
       <p>R$ {data.preco}</p>
-      {data.fotos.map((foto) => (
-        <img key={foto.titulo} src={foto.src} alt={foto.titulo} />
-      ))}
     </>
   );
 };
